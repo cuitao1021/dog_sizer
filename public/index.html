@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗狗类型管理</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .create-form {
+            max-width: 600px;
+            margin: 0 auto 48px;
+            padding: 24px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #40a9ff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+        td img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        #preview {
+            margin-top: 8px;
+        }
+        #preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 4px;
+        }
+        .error {
+            color: #ff4d4f;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .edit-btn {
+            background: #52c41a;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .edit-btn:hover {
+            background: #73d13d;
+        }
+        
+        .save-btn {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn {
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #1890ff;
+            border-radius: 4px;
+        }
+
+        .edit-mode .display-content {
+            display: none;
+        }
+
+        .display-mode .edit-content {
+            display: none;
+        }
+
+        .delete-btn {
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .delete-btn:hover {
+            background: #ff7875;
+        }
+
+        /* Tab 相关样式 */
+        .tabs {
+            margin-bottom: 24px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 8px;
+            border-radius: 4px 4px 0 0;
+            color: #666;
+        }
+        
+        .tab-button.active {
+            background: #fff;
+            border-bottom: 2px solid #1890ff;
+            color: #1890ff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 添加选择框样式 */
+        select.edit-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* 文本框样式 */
+        textarea.edit-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 60px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>宠物用品管理系统</h1>
+        
+        <!-- Tab 按钮 -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('dogTypes')">狗狗类型</button>
+            <button class="tab-button" onclick="switchTab('brands')">品牌管理</button>
+            <button class="tab-button" onclick="switchTab('products')">产品管理</button>
+            <button class="tab-button" onclick="switchTab('dogCards')">内容管理</button>
+        </div>
+        
+        <!-- 狗狗类型管理 -->
+        <div id="dogTypes" class="tab-content active">
+            <div class="create-form">
+                <h2>创建新品种</h2>
+                <form id="dogTypeForm">
+                    <div class="form-group">
+                        <label for="name">狗狗品种名称（中文）</label>
+                        <input type="text" id="name" name="name" required placeholder="例如：柴犬">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nameEn">狗狗品种名称（英文）</label>
+                        <input type="text" id="nameEn" name="nameEn" required placeholder="例如：Shiba Inu">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="icon">品种图标</label>
+                        <input type="file" id="icon" name="icon" accept="image/*" required>
+                        <div id="preview"></div>
+                    </div>
+                    
+                    <button type="submit">创建狗狗类型</button>
+                </form>
+            </div>
+            
+            <div class="list-view">
+                <h2>已有品种</h2>
+                <table id="dogTypeTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>图标</th>
+                            <th>中文名称</th>
+                            <th>英文名称</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 品牌管理 -->
+        <div id="brands" class="tab-content">
+            <div class="create-form">
+                <h2>创建新品牌</h2>
+                <form id="brandForm">
+                    <div class="form-group">
+                        <label for="brandName">品牌名称（中文）</label>
+                        <input type="text" id="brandName" name="name" required placeholder="例如：宠物品牌A">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="brandNameEn">品牌名称（英文）</label>
+                        <input type="text" id="brandNameEn" name="nameEn" required placeholder="例如：Pet Brand A">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="brandDescription">品牌描述</label>
+                        <textarea id="brandDescription" name="description" required placeholder="请输入品牌描述" class="edit-input"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="brandIcon">品牌图标</label>
+                        <input type="file" id="brandIcon" name="icon" accept="image/*" required>
+                        <div id="brandPreview"></div>
+                    </div>
+                    
+                    <button type="submit">创建品牌</button>
+                </form>
+            </div>
+            
+            <div class="list-view">
+                <h2>已有品牌</h2>
+                <table id="brandTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>图标</th>
+                            <th>中文名称</th>
+                            <th>英文名称</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 产品管理 -->
+        <div id="products" class="tab-content">
+            <div class="create-form">
+                <h2>创建新产品</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productName">产品名称</label>
+                        <input type="text" id="productName" name="name" required placeholder="例如：宠物衣服A">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productBrand">所属品牌</label>
+                        <select id="productBrand" name="brandId" required class="edit-input">
+                            <option value="">请选择品牌</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">创建产品</button>
+                </form>
+            </div>
+            
+            <div class="list-view">
+                <h2>已有产品</h2>
+                <table id="productTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>产品名称</th>
+                            <th>所属品牌</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 内容管理 -->
+        <div id="dogCards" class="tab-content">
+            <div class="create-form">
+                <h2>创建新内容</h2>
+                <form id="dogCardForm">
+                    <div class="form-group">
+                        <label for="dogTypeSelect">狗狗品种</label>
+                        <select id="dogTypeSelect" name="dogTypeId" required class="edit-input">
+                            <option value="">请选择品种</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productSelect">产品</label>
+                        <select id="productSelect" name="productId" required class="edit-input">
+                            <option value="">请选择产品</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sizeInput">尺码</label>
+                        <input type="text" id="sizeInput" name="size" required class="edit-input" placeholder="例如：L、XL、2XL">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>测量数据</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label for="neckSize">脖围 (cm)</label>
+                                <input type="number" id="neckSize" name="neck" class="edit-input" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label for="chestSize">胸围 (cm)</label>
+                                <input type="number" id="chestSize" name="chest" class="edit-input" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label for="backSize">背长 (cm)</label>
+                                <input type="number" id="backSize" name="back" class="edit-input" min="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cardImage">内容图片</label>
+                        <input type="file" id="cardImage" name="image" accept="image/*" class="edit-input">
+                        <div id="cardPreview"></div>
+                    </div>
+                    
+                    <button type="submit">创建内容</button>
+                </form>
+            </div>
+            
+            <div class="list-view">
+                <h2>已有内容</h2>
+                <table id="dogCardTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>图片</th>
+                            <th>狗狗品种</th>
+                            <th>产品</th>
+                            <th>尺码</th>
+                            <th>测量数据</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const form = document.getElementById('dogTypeForm');
+        const tableBody = document.querySelector('#dogTypeTable tbody');
+        const iconInput = document.getElementById('icon');
+        const preview = document.getElementById('preview');
+
+        // 预览图片
+        iconInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件！');
+                    this.value = '';
+                    preview.innerHTML = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="预览">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 获取狗狗类型列表
+        async function fetchDogTypes() {
+            try {
+                const response = await fetch('http://localhost:3000/api/dog-types');
+                if (!response.ok) throw new Error('获取数据失败');
+                const data = await response.json();
+                renderTable(data.dogTypes);
+            } catch (error) {
+                console.error('获取列表失败：', error);
+                alert('获取狗狗类型列表失败！');
+            }
+        }
+
+        // 渲染表格
+        function renderTable(dogTypes) {
+            tableBody.innerHTML = dogTypes.map(dog => `
+                <tr data-id="${dog.id}" class="display-mode">
+                    <td>
+                        <span class="display-content">${dog.id}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${dog.id}" name="id">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">
+                            <img src="http://localhost:3000${dog.icon}" alt="${dog.name}">
+                        </span>
+                        <div class="edit-content">
+                            <input type="file" class="edit-input" name="icon" accept="image/*">
+                            <img src="http://localhost:3000${dog.icon}" alt="${dog.name}" style="max-width: 40px; margin-top: 4px;">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">${dog.name}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${dog.name}" name="name">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">${dog.nameEn}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${dog.nameEn}" name="nameEn">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="startEdit('${dog.id}')">编辑</button>
+                            <button class="save-btn" onclick="saveEdit('${dog.id}')" style="display: none;">保存</button>
+                            <button class="cancel-btn" onclick="cancelEdit('${dog.id}')" style="display: none;">取消</button>
+                            <button class="delete-btn" onclick="confirmDelete('${dog.id}')">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 开始编辑
+        function startEdit(dogId) {
+            const row = document.querySelector(`tr[data-id="${dogId}"]`);
+            row.classList.remove('display-mode');
+            row.classList.add('edit-mode');
+            row.querySelector('.edit-btn').style.display = 'none';
+            row.querySelector('.save-btn').style.display = 'inline-block';
+            row.querySelector('.cancel-btn').style.display = 'inline-block';
+        }
+
+        // 取消编辑
+        function cancelEdit(dogId) {
+            const row = document.querySelector(`tr[data-id="${dogId}"]`);
+            row.classList.remove('edit-mode');
+            row.classList.add('display-mode');
+            row.querySelector('.edit-btn').style.display = 'inline-block';
+            row.querySelector('.save-btn').style.display = 'none';
+            row.querySelector('.cancel-btn').style.display = 'none';
+            fetchDogTypes(); // 重新加载数据
+        }
+
+        // 保存编辑
+        async function saveEdit(dogId) {
+            const row = document.querySelector(`tr[data-id="${dogId}"]`);
+            const formData = new FormData();
+            
+            // 获取编辑后的值
+            const newId = row.querySelector('input[name="id"]').value;
+            const name = row.querySelector('input[name="name"]').value;
+            const nameEn = row.querySelector('input[name="nameEn"]').value;
+            const iconFile = row.querySelector('input[name="icon"]').files[0];
+
+            // 验证必填字段
+            if (!name || !nameEn || !newId) {
+                alert('请填写完整信息！');
+                return;
+            }
+
+            // 验证ID是否重复
+            const response = await fetch('http://localhost:3000/api/dog-types');
+            const data = await response.json();
+            const isDuplicateId = data.dogTypes.some(dog => dog.id === newId && dog.id !== dogId);
+            
+            if (isDuplicateId) {
+                alert('ID已存在，请使用其他ID！');
+                return;
+            }
+
+            // 构建更新数据
+            formData.append('id', newId);
+            formData.append('name', name);
+            formData.append('nameEn', nameEn);
+            if (iconFile) {
+                formData.append('icon', iconFile);
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/dog-types/' + dogId, {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '更新失败');
+                }
+
+                alert('更新成功！');
+                cancelEdit(dogId);
+            } catch (error) {
+                console.error('更新失败：', error);
+                alert(error.message || '更新失败，请重试！');
+            }
+        }
+
+        // 提交表单
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/dog-types', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '提交失败');
+                }
+                
+                const result = await response.json();
+                alert('创建成功！');
+                form.reset();
+                preview.innerHTML = '';
+                fetchDogTypes();
+            } catch (error) {
+                console.error('创建失败：', error);
+                alert(error.message || '创建失败，请重试！');
+            }
+        });
+
+        // 添加删除确认和执行函数
+        async function confirmDelete(dogId) {
+            const dogType = document.querySelector(`tr[data-id="${dogId}"]`);
+            const dogName = dogType.querySelector('td:nth-child(3)').textContent;
+            
+            if (confirm(`确定要删除"${dogName}"吗？此操作不可恢复。`)) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/dog-types/' + dogId, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || '删除失败');
+                    }
+
+                    alert('删除成功！');
+                    fetchDogTypes();
+                } catch (error) {
+                    console.error('删除失败：', error);
+                    alert(error.message || '删除失败，请重试！');
+                }
+            }
+        }
+
+        // 切换 Tab
+        function switchTab(tabId) {
+            // 隐藏所有 tab 内容
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 取消所有 tab 按钮的激活状态
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 显示选中的 tab 内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 激活对应的按钮
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            // 加载对应的数据
+            if (tabId === 'dogTypes') {
+                fetchDogTypes();
+            } else if (tabId === 'brands') {
+                fetchBrands();
+            } else if (tabId === 'products') {
+                fetchProducts();
+            } else if (tabId === 'dogCards') {
+                fetchDogCards();
+            }
+        }
+        
+        // 品牌相关函数
+        async function fetchBrands() {
+            try {
+                const response = await fetch('http://localhost:3000/api/brands');
+                if (!response.ok) throw new Error('获取数据失败');
+                const data = await response.json();
+                renderBrandTable(data.brands);
+            } catch (error) {
+                console.error('获取品牌列表失败：', error);
+                alert('获取品牌列表失败！');
+            }
+        }
+        
+        // 渲染品牌表格
+        function renderBrandTable(brands) {
+            const tableBody = document.querySelector('#brandTable tbody');
+            tableBody.innerHTML = brands.map(brand => `
+                <tr data-id="${brand.id}" class="display-mode">
+                    <td>
+                        <span class="display-content">${brand.id}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${brand.id}" name="id">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">
+                            <img src="http://localhost:3000${brand.icon}" alt="${brand.name}">
+                        </span>
+                        <div class="edit-content">
+                            <input type="file" class="edit-input" name="icon" accept="image/*">
+                            <img src="http://localhost:3000${brand.icon}" alt="${brand.name}" style="max-width: 40px; margin-top: 4px;">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">${brand.name}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${brand.name}" name="name">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">${brand.nameEn}</span>
+                        <div class="edit-content">
+                            <input type="text" class="edit-input" value="${brand.nameEn}" name="nameEn">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="display-content">${brand.description}</span>
+                        <div class="edit-content">
+                            <textarea class="edit-input" name="description">${brand.description}</textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="startBrandEdit('${brand.id}')">编辑</button>
+                            <button class="save-btn" onclick="saveBrandEdit('${brand.id}')" style="display: none;">保存</button>
+                            <button class="cancel-btn" onclick="cancelBrandEdit('${brand.id}')" style="display: none;">取消</button>
+                            <button class="delete-btn" onclick="confirmBrandDelete('${brand.id}')">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 品牌图片预览
+        const brandIconInput = document.getElementById('brandIcon');
+        const brandPreview = document.getElementById('brandPreview');
+        
+        brandIconInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件！');
+                    this.value = '';
+                    brandPreview.innerHTML = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    brandPreview.innerHTML = `<img src="${e.target.result}" alt="预览" style="max-width: 100px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 提交品牌表单
+        const brandForm = document.getElementById('brandForm');
+        brandForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(brandForm);
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/brands', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '提交失败');
+                }
+                
+                alert('创建成功！');
+                brandForm.reset();
+                brandPreview.innerHTML = '';
+                fetchBrands();
+            } catch (error) {
+                console.error('创建失败：', error);
+                alert(error.message || '创建失败，请重试！');
+            }
+        });
+
+        // 开始编辑品牌
+        function startBrandEdit(brandId) {
+            const row = document.querySelector(`tr[data-id="${brandId}"]`);
+            row.classList.remove('display-mode');
+            row.classList.add('edit-mode');
+            row.querySelector('.edit-btn').style.display = 'none';
+            row.querySelector('.save-btn').style.display = 'inline-block';
+            row.querySelector('.cancel-btn').style.display = 'inline-block';
+        }
+
+        // 取消编辑品牌
+        function cancelBrandEdit(brandId) {
+            const row = document.querySelector(`tr[data-id="${brandId}"]`);
+            row.classList.remove('edit-mode');
+            row.classList.add('display-mode');
+            row.querySelector('.edit-btn').style.display = 'inline-block';
+            row.querySelector('.save-btn').style.display = 'none';
+            row.querySelector('.cancel-btn').style.display = 'none';
+            fetchBrands(); // 重新加载数据
+        }
+
+        // 保存品牌编辑
+        async function saveBrandEdit(brandId) {
+            const row = document.querySelector(`tr[data-id="${brandId}"]`);
+            const formData = new FormData();
+            
+            // 获取编辑后的值
+            const newId = row.querySelector('input[name="id"]').value;
+            const name = row.querySelector('input[name="name"]').value;
+            const nameEn = row.querySelector('input[name="nameEn"]').value;
+            const description = row.querySelector('textarea[name="description"]').value;
+            const iconFile = row.querySelector('input[name="icon"]').files[0];
+            
+            // 验证必填字段
+            if (!name || !nameEn || !newId || !description) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            // 构建更新数据
+            formData.append('id', newId);
+            formData.append('name', name);
+            formData.append('nameEn', nameEn);
+            formData.append('description', description);
+            if (iconFile) {
+                formData.append('icon', iconFile);
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/brands/' + brandId, {
+                    method: 'PUT',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '更新失败');
+                }
+                
+                alert('更新成功！');
+                cancelBrandEdit(brandId);
+            } catch (error) {
+                console.error('更新失败：', error);
+                alert(error.message || '更新失败，请重试！');
+            }
+        }
+
+        // 确认删除品牌
+        async function confirmBrandDelete(brandId) {
+            const brandRow = document.querySelector(`tr[data-id="${brandId}"]`);
+            const brandName = brandRow.querySelector('td:nth-child(3)').textContent;
+            
+            if (confirm(`确定要删除"${brandName}"吗？此操作不可恢复。`)) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/brands/' + brandId, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || '删除失败');
+                    }
+                    
+                    alert('删除成功！');
+                    fetchBrands();
+                } catch (error) {
+                    console.error('删除失败：', error);
+                    alert(error.message || '删除失败，请重试！');
+                }
+            }
+        }
+
+        // 产品相关函数
+        async function fetchProducts() {
+            try {
+                // 获取产品列表
+                const response = await fetch('http://localhost:3000/api/products');
+                if (!response.ok) throw new Error('获取数据失败');
+                const productData = await response.json();
+                
+                // 获取品牌列表（用于显示品牌名称）
+                const brandResponse = await fetch('http://localhost:3000/api/brands');
+                if (!brandResponse.ok) throw new Error('获取品牌数据失败');
+                const brandData = await brandResponse.json();
+                
+                // 更新品牌选择下拉框
+                updateBrandSelect(brandData.brands);
+                
+                // 渲染产品表格
+                renderProductTable(productData.products, brandData.brands);
+            } catch (error) {
+                console.error('获取产品列表失败：', error);
+                alert('获取产品列表失败！');
+            }
+        }
+        
+        // 更新品牌选择下拉框
+        function updateBrandSelect(brands) {
+            const selects = document.querySelectorAll('select[name="brandId"]');
+            const options = brands.map(brand => 
+                `<option value="${brand.id}">${brand.name}</option>`
+            ).join('');
+            
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">请选择品牌</option>' + options;
+                if (currentValue) select.value = currentValue;
+            });
+        }
+        
+        // 渲染产品表格
+        function renderProductTable(products, brands) {
+            const tableBody = document.querySelector('#productTable tbody');
+            tableBody.innerHTML = products.map(product => {
+                const brand = brands.find(b => b.id === product.brandId) || { name: '未知品牌' };
+                return `
+                    <tr data-id="${product.id}" class="display-mode">
+                        <td>
+                            <span class="display-content">${product.id}</span>
+                            <div class="edit-content">
+                                <input type="text" class="edit-input" value="${product.id}" name="id">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">${product.name}</span>
+                            <div class="edit-content">
+                                <input type="text" class="edit-input" value="${product.name}" name="name">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">${brand.name}</span>
+                            <div class="edit-content">
+                                <select class="edit-input" name="brandId">
+                                    <option value="">请选择品牌</option>
+                                    ${brands.map(b => `
+                                        <option value="${b.id}" ${b.id === product.brandId ? 'selected' : ''}>
+                                            ${b.name}
+                                        </option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="edit-btn" onclick="startProductEdit('${product.id}')">编辑</button>
+                                <button class="save-btn" onclick="saveProductEdit('${product.id}')" style="display: none;">保存</button>
+                                <button class="cancel-btn" onclick="cancelProductEdit('${product.id}')" style="display: none;">取消</button>
+                                <button class="delete-btn" onclick="confirmProductDelete('${product.id}')">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 编辑产品相关函数
+        function startProductEdit(productId) {
+            const row = document.querySelector(`tr[data-id="${productId}"]`);
+            row.classList.remove('display-mode');
+            row.classList.add('edit-mode');
+            row.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'none');
+            row.querySelectorAll('.save-btn, .cancel-btn').forEach(btn => btn.style.display = 'inline-block');
+        }
+        
+        function cancelProductEdit(productId) {
+            const row = document.querySelector(`tr[data-id="${productId}"]`);
+            row.classList.add('display-mode');
+            row.classList.remove('edit-mode');
+            row.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'inline-block');
+            row.querySelectorAll('.save-btn, .cancel-btn').forEach(btn => btn.style.display = 'none');
+        }
+        
+        // 保存产品编辑
+        async function saveProductEdit(productId) {
+            const row = document.querySelector(`tr[data-id="${productId}"]`);
+            const formData = new FormData();
+            
+            // 获取编辑后的值
+            const newId = row.querySelector('input[name="id"]').value;
+            const name = row.querySelector('input[name="name"]').value;
+            const brandId = row.querySelector('select[name="brandId"]').value;
+            
+            // 验证必填字段
+            if (!name || !brandId || !newId) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            // 构建更新数据
+            formData.append('id', newId);
+            formData.append('name', name);
+            formData.append('brandId', brandId);
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/products/' + productId, {
+                    method: 'PUT',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '更新失败');
+                }
+                
+                alert('更新成功！');
+                cancelProductEdit(productId);
+                fetchProducts(); // 重新加载数据
+            } catch (error) {
+                console.error('更新失败：', error);
+                alert(error.message || '更新失败，请重试！');
+            }
+        }
+        
+        // 确认删除产品
+        async function confirmProductDelete(productId) {
+            const productRow = document.querySelector(`tr[data-id="${productId}"]`);
+            const productName = productRow.querySelector('td:nth-child(2)').textContent.trim();
+            
+            if (confirm(`确定要删除"${productName}"吗？此操作不可恢复。`)) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/products/' + productId, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || '删除失败');
+                    }
+                    
+                    alert('删除成功！');
+                    fetchProducts();
+                } catch (error) {
+                    console.error('删除失败：', error);
+                    alert(error.message || '删除失败，请重试！');
+                }
+            }
+        }
+
+        // 产品相关函数
+        // 提交产品表单
+        const productForm = document.getElementById('productForm');
+        productForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(productForm);
+            
+            // 验证必填字段
+            if (!formData.get('name') || !formData.get('brandId')) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '提交失败');
+                }
+                
+                alert('创建成功！');
+                productForm.reset();
+                fetchProducts();
+            } catch (error) {
+                console.error('创建失败：', error);
+                alert(error.message || '创建失败，请重试！');
+            }
+        });
+
+        // 内容管理相关函数
+        async function fetchDogCards() {
+            try {
+                // 获取所有需要的数据
+                const [dogCardsResponse, dogTypesResponse, productsResponse] = await Promise.all([
+                    fetch('http://localhost:3000/api/dog-cards'),
+                    fetch('http://localhost:3000/api/dog-types'),
+                    fetch('http://localhost:3000/api/products')
+                ]);
+
+                const dogCardsData = await dogCardsResponse.json();
+                const dogTypesData = await dogTypesResponse.json();
+                const productsData = await productsResponse.json();
+
+                // 更新选择框
+                updateDogTypeSelect(dogTypesData.dogTypes);
+                updateProductSelect(productsData.products);
+
+                // 渲染表格
+                renderDogCardTable(dogCardsData.dogCards, dogTypesData.dogTypes, productsData.products);
+            } catch (error) {
+                console.error('获取内容列表失败：', error);
+                alert('获取内容列表失败！');
+            }
+        }
+
+        // 更新狗狗品种选择框
+        function updateDogTypeSelect(dogTypes) {
+            const selects = document.querySelectorAll('select[name="dogTypeId"]');
+            const options = dogTypes.map(dog => 
+                `<option value="${dog.id}">${dog.name}</option>`
+            ).join('');
+            
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">请选择狗狗品种</option>' + options;
+                if (currentValue) select.value = currentValue;
+            });
+        }
+
+        // 更新产品选择框
+        function updateProductSelect(products) {
+            const selects = document.querySelectorAll('select[name="productId"]');
+            const options = products.map(product => 
+                `<option value="${product.id}">${product.name}</option>`
+            ).join('');
+            
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">请选择产品</option>' + options;
+                if (currentValue) select.value = currentValue;
+            });
+        }
+
+        // 渲染内容表格
+        function renderDogCardTable(dogCards, dogTypes, products) {
+            const tableBody = document.querySelector('#dogCardTable tbody');
+            tableBody.innerHTML = dogCards.map(card => {
+                const dogType = dogTypes.find(d => d.id === card.dogTypeId) || { name: '未知品种' };
+                const product = products.find(p => p.id === card.product.productId) || { name: '未知产品' };
+                
+                return `
+                    <tr data-id="${card.id}" class="display-mode">
+                        <td>
+                            <span class="display-content">${card.id}</span>
+                            <div class="edit-content">
+                                <input type="text" class="edit-input" value="${card.id}" name="id">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">
+                                <img src="http://localhost:3000${card.image}" alt="内容图片">
+                            </span>
+                            <div class="edit-content">
+                                <input type="file" class="edit-input" name="image" accept="image/*">
+                                <img src="http://localhost:3000${card.image}" alt="内容图片" style="max-width: 40px; margin-top: 4px;">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">${dogType.name}</span>
+                            <div class="edit-content">
+                                <select class="edit-input" name="dogTypeId">
+                                    <option value="">请选择狗狗品种</option>
+                                    ${dogTypes.map(d => `
+                                        <option value="${d.id}" ${d.id === card.dogTypeId ? 'selected' : ''}>
+                                            ${d.name}
+                                        </option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">${product.name}</span>
+                            <div class="edit-content">
+                                <select class="edit-input" name="productId">
+                                    <option value="">请选择产品</option>
+                                    ${products.map(p => `
+                                        <option value="${p.id}" ${p.id === card.product.productId ? 'selected' : ''}>
+                                            ${p.name}
+                                        </option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">${card.product.size}</span>
+                            <div class="edit-content">
+                                <input type="text" class="edit-input" name="size" value="${card.product.size}" placeholder="例如：L、XL、2XL">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="display-content">
+                                脖围: ${card.measurements.neck}cm<br>
+                                胸围: ${card.measurements.chest}cm<br>
+                                背长: ${card.measurements.back}cm
+                            </span>
+                            <div class="edit-content">
+                                <input type="number" class="edit-input" name="neck" value="${card.measurements.neck}" step="0.1" style="margin-bottom: 4px;" placeholder="脖围">
+                                <input type="number" class="edit-input" name="chest" value="${card.measurements.chest}" step="0.1" style="margin-bottom: 4px;" placeholder="胸围">
+                                <input type="number" class="edit-input" name="back" value="${card.measurements.back}" step="0.1" placeholder="背长">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="edit-btn" onclick="startDogCardEdit('${card.id}')">编辑</button>
+                                <button class="save-btn" onclick="saveDogCardEdit('${card.id}')" style="display: none;">保存</button>
+                                <button class="cancel-btn" onclick="cancelDogCardEdit('${card.id}')" style="display: none;">取消</button>
+                                <button class="delete-btn" onclick="confirmDogCardDelete('${card.id}')">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 图片预览
+        const cardImageInput = document.getElementById('cardImage');
+        const cardPreview = document.getElementById('cardPreview');
+        
+        cardImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件！');
+                    this.value = '';
+                    cardPreview.innerHTML = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    cardPreview.innerHTML = `<img src="${e.target.result}" alt="预览" style="max-width: 100px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 提交内容表单
+        const dogCardForm = document.getElementById('dogCardForm');
+        dogCardForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            
+            // 获取必填字段
+            const dogTypeId = document.getElementById('dogTypeSelect').value;
+            const productId = document.getElementById('productSelect').value;
+            const size = document.getElementById('sizeInput').value;
+            
+            // 验证必填字段
+            if (!dogTypeId || !productId || !size) {
+                alert('请选择品种、产品并填写尺码！');
+                return;
+            }
+            
+            // 添加必填字段到formData
+            formData.append('dogTypeId', dogTypeId);
+            formData.append('productId', productId);
+            formData.append('size', size);
+            
+            // 获取可选的测量数据
+            const neck = document.getElementById('neckSize').value.trim();
+            const chest = document.getElementById('chestSize').value.trim();
+            const back = document.getElementById('backSize').value.trim();
+            
+            // 只添加有值的测量数据
+            if (neck) formData.append('neck', neck);
+            if (chest) formData.append('chest', chest);
+            if (back) formData.append('back', back);
+            
+            // 获取图片文件（如果有）
+            const imageFile = document.getElementById('cardImage').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/dog-cards', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('服务器返回格式错误');
+                }
+                
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || '提交失败');
+                }
+                
+                alert('创建成功！');
+                dogCardForm.reset();
+                cardPreview.innerHTML = '';
+                fetchDogCards();
+            } catch (error) {
+                console.error('创建失败：', error);
+                alert(error.message || '创建失败，请重试！');
+            }
+        });
+        
+        // 开始编辑内容
+        function startDogCardEdit(cardId) {
+            const row = document.querySelector(`tr[data-id="${cardId}"]`);
+            row.classList.remove('display-mode');
+            row.classList.add('edit-mode');
+            row.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'none');
+            row.querySelectorAll('.save-btn, .cancel-btn').forEach(btn => btn.style.display = 'inline-block');
+        }
+        
+        // 取消编辑内容
+        function cancelDogCardEdit(cardId) {
+            const row = document.querySelector(`tr[data-id="${cardId}"]`);
+            row.classList.add('display-mode');
+            row.classList.remove('edit-mode');
+            row.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'inline-block');
+            row.querySelectorAll('.save-btn, .cancel-btn').forEach(btn => btn.style.display = 'none');
+            fetchDogCards(); // 重新加载数据
+        }
+        
+        // 保存内容编辑
+        async function saveDogCardEdit(cardId) {
+            const row = document.querySelector(`tr[data-id="${cardId}"]`);
+            const formData = new FormData();
+            
+            // 获取编辑后的值
+            const dogTypeId = row.querySelector('select[name="dogTypeId"]').value;
+            const productId = row.querySelector('select[name="productId"]').value;
+            const size = row.querySelector('input[name="size"]').value;
+            const neck = row.querySelector('input[name="neck"]').value;
+            const chest = row.querySelector('input[name="chest"]').value;
+            const back = row.querySelector('input[name="back"]').value;
+            const imageFile = row.querySelector('input[name="image"]').files[0];
+            
+            // 验证必填字段
+            if (!dogTypeId || !productId || !size || !neck || !chest || !back) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            // 构建更新数据
+            formData.append('dogTypeId', dogTypeId);
+            formData.append('productId', productId);
+            formData.append('size', size);
+            formData.append('neck', neck);
+            formData.append('chest', chest);
+            formData.append('back', back);
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/dog-cards/' + cardId, {
+                    method: 'PUT',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || '更新失败');
+                }
+                
+                alert('更新成功！');
+                cancelDogCardEdit(cardId);
+            } catch (error) {
+                console.error('更新失败：', error);
+                alert(error.message || '更新失败，请重试！');
+            }
+        }
+        
+        // 确认删除内容
+        async function confirmDogCardDelete(cardId) {
+            const cardRow = document.querySelector(`tr[data-id="${cardId}"]`);
+            const dogTypeName = cardRow.querySelector('td:nth-child(3)').textContent.trim();
+            
+            if (confirm(`确定要删除"${dogTypeName}"的这条内容吗？此操作不可恢复。`)) {
+                try {
+                    const response = await fetch('http://localhost:3000/api/dog-cards/' + cardId, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || '删除失败');
+                    }
+                    
+                    alert('删除成功！');
+                    fetchDogCards();
+                } catch (error) {
+                    console.error('删除失败：', error);
+                    alert(error.message || '删除失败，请重试！');
+                }
+            }
+        }
+
+        // 初始化加载
+        fetchDogTypes();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>今天吃什么</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        .meal-section {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .meal-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .dish-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dish-item {
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .dish-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .dish-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .dish-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .dish-meta span {
+            margin-left: 10px;
+        }
+        .properties {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .tag {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: white;
+            background-color: #4CAF50;
+            white-space: nowrap;
+        }
+        .tag.fiber {
+            background-color: #2196F3;  /* 蓝色 - 膳食纤维 */
+        }
+        .tag.protein {
+            background-color: #9C27B0;  /* 紫色 - 蛋白质 */
+        }
+        .tag.omega {
+            background-color: #FF9800;  /* 橙色 - ω-3 */
+        }
+        .tag.vitamin {
+            background-color: #4CAF50;  /* 绿色 - 维生素 */
+        }
+        .tag.low-calorie {
+            background-color: #607D8B;  /* 灰蓝色 - 低热量 */
+        }
+        .tag.other {
+            background-color: #795548;  /* 棕色 - 其他 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #2c3e50;">今天吃什么？</h1>
+        <div class="meal-section">
+            <div class="meal-title">🌅 早餐</div>
+            <div id="breakfast" class="dish-list">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+        <div class="meal-section">
+            <div class="meal-title">🌞 午餐</div>
+            <div id="lunch" class="dish-list">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+        <button onclick="getRandomMeals()">换一个</button>
+    </div>
+
+    <script>
+        function getTagClass(tag) {
+            if (tag.includes('膳食纤维')) return 'fiber';
+            if (tag.includes('蛋白质')) return 'protein';
+            if (tag.includes('ω-3')) return 'omega';
+            if (tag.includes('维生素')) return 'vitamin';
+            if (tag.includes('低热量')) return 'low-calorie';
+            return 'other';
+        }
+
+        function renderTags(tags) {
+            if (!tags || !Array.isArray(tags)) return '';
+            
+            return `
+                <div class="tag-list">
+                    ${tags.map(tag => `
+                        <span class="tag ${getTagClass(tag)}">${tag}</span>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderMeal(dishes) {
+            console.log('渲染菜品，原始数据:', dishes);
+            if (!dishes || !Array.isArray(dishes) || dishes.length === 0) {
+                console.log('无效的菜品数据:', dishes);
+                return '<div class="loading">暂无推荐</div>';
+            }
+
+            return dishes.map(dish => `
+                <div class="dish-item">
+                    <div class="dish-header">
+                        <div class="dish-name">${dish.name}</div>
+                        <div class="dish-meta">
+                            <span>${dish.weight}</span>
+                            <span>${dish.calories}卡</span>
+                        </div>
+                    </div>
+                    <div class="properties">
+                        💡 ${dish.properties}
+                    </div>
+                    ${renderTags(dish.anti_inflammatory_tags)}
+                </div>
+            `).join('');
+        }
+
+        function getRandomMeals() {
+            console.log('开始获取随机菜品...');
+            const breakfast = document.getElementById('breakfast');
+            const lunch = document.getElementById('lunch');
+            
+            breakfast.innerHTML = '<div class="loading">加载中...</div>';
+            lunch.innerHTML = '<div class="loading">加载中...</div>';
+
+            fetch('/random-meals?' + new Date().getTime())  // 添加时间戳避免缓存
+                .then(response => {
+                    console.log('收到响应:', response.status);
+                    return response.json().then(data => {
+                        console.log('解析的数据:', data);
+                        if (!response.ok) {
+                            throw new Error(data.error || '请求失败');
+                        }
+                        return data;
+                    });
+                })
+                .then(data => {
+                    console.log('处理数据:', data);
+                    if (data.breakfast) {
+                        breakfast.innerHTML = renderMeal(data.breakfast);
+                    } else {
+                        console.warn('没有早餐数据');
+                        breakfast.innerHTML = '<div class="loading">暂无推荐</div>';
+                    }
+                    
+                    if (data.lunch) {
+                        lunch.innerHTML = renderMeal(data.lunch);
+                    } else {
+                        console.warn('没有午餐数据');
+                        lunch.innerHTML = '<div class="loading">暂无推荐</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('错误详情:', error);
+                    breakfast.innerHTML = '<div class="loading">获取失败: ' + error.message + '</div>';
+                    lunch.innerHTML = '<div class="loading">获取失败: ' + error.message + '</div>';
+                });
+        }
+
+        // 页面加载时获取随机菜品
+        window.onload = getRandomMeals;
+    </script>
+</body>
+</html>

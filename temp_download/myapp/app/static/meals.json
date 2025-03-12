@@ -1,0 +1,140 @@
+{
+    "dishes": [
+        {
+            "name": "小米薏仁粥",
+            "weight": "250g",
+            "calories": 200,
+            "properties": "薏仁具有良好的抗炎作用，富含膳食纤维；小米易消化，性质温和。",
+            "anti_inflammatory_tags": ["高膳食纤维", "易消化", "谷物抗炎"],
+            "suitable_for": {
+                "breakfast": true,
+                "lunch": false,
+                "dinner": false
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": false,
+                "starch": true
+            }
+        },
+        {
+            "name": "蒸红薯",
+            "weight": "150g",
+            "calories": 130,
+            "properties": "富含β-胡萝卜素和膳食纤维，具有抗氧化作用；蒸煮方式保留营养。",
+            "anti_inflammatory_tags": ["高膳食纤维", "抗氧化", "低升糖指数"],
+            "suitable_for": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": false,
+                "starch": true
+            }
+        },
+        {
+            "name": "清蒸三文鱼",
+            "weight": "120g",
+            "calories": 200,
+            "properties": "富含omega-3脂肪酸，是天然的抗炎食物；清蒸方式保留营养。",
+            "anti_inflammatory_tags": ["富含ω-3脂肪酸", "优质蛋白质", "低碳水"],
+            "suitable_for": {
+                "breakfast": false,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": true,
+                "vegetable": false,
+                "starch": false
+            }
+        },
+        {
+            "name": "水煮西兰花",
+            "weight": "150g",
+            "calories": 50,
+            "properties": "富含维生素C和硫代葡萄糖苷，具有抗炎效果。",
+            "anti_inflammatory_tags": ["富含维生素", "含硫营养素", "低热量"],
+            "suitable_for": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": true,
+                "starch": false
+            }
+        },
+        {
+            "name": "燕麦粥",
+            "weight": "200g",
+            "calories": 180,
+            "properties": "富含β-葡聚糖，具有抗炎作用；全谷物提供持久能量。",
+            "anti_inflammatory_tags": ["高膳食纤维", "全谷物", "含β-葡聚糖"],
+            "suitable_for": {
+                "breakfast": true,
+                "lunch": false,
+                "dinner": false
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": false,
+                "starch": true
+            }
+        },
+        {
+            "name": "水煮菠菜",
+            "weight": "150g",
+            "calories": 35,
+            "properties": "富含铁质和叶酸；具有补铁效果。",
+            "anti_inflammatory_tags": ["富含叶酸", "含铁", "低热量"],
+            "suitable_for": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": true,
+                "starch": false
+            }
+        },
+        {
+            "name": "藜麦饭",
+            "weight": "200g",
+            "calories": 220,
+            "properties": "富含优质蛋白和膳食纤维；不含麸质。",
+            "anti_inflammatory_tags": ["优质蛋白质", "高膳食纤维", "无麸质"],
+            "suitable_for": {
+                "breakfast": false,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": false,
+                "vegetable": false,
+                "starch": true
+            }
+        },
+        {
+            "name": "清蒸鲭鱼",
+            "weight": "150g",
+            "calories": 190,
+            "properties": "富含omega-3脂肪酸；具有抗炎特性。",
+            "anti_inflammatory_tags": ["富含ω-3脂肪酸", "优质蛋白质", "低碳水"],
+            "suitable_for": {
+                "breakfast": false,
+                "lunch": true,
+                "dinner": true
+            },
+            "contains": {
+                "protein": true,
+                "vegetable": false,
+                "starch": false
+            }
+        }
+    ]
+} 

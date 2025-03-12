@@ -1,0 +1,131 @@
+{
+  "dogTypes": [
+    {
+      "id": "1001",
+      "name": "吉娃娃",
+      "nameEn": "chihuahua",
+      "icon": "/icons/1001.png"
+    },
+    {
+      "id": "1002",
+      "name": "博美犬",
+      "nameEn": "pomeranian",
+      "icon": "/icons/1002.png"
+    },
+    {
+      "id": "1003",
+      "name": "泰迪",
+      "nameEn": "toy poodle",
+      "icon": "/icons/1003.png"
+    },
+    {
+      "id": "1004",
+      "name": "法国斗牛犬",
+      "nameEn": "french bulldog",
+      "icon": "/icons/1004.png"
+    },
+    {
+      "id": "1005",
+      "name": "柯基",
+      "nameEn": "welsh corgi",
+      "icon": "/icons/1005.png"
+    },
+    {
+      "id": "1006",
+      "name": "柴犬",
+      "nameEn": "shiba inu",
+      "icon": "/icons/1006.png"
+    },
+    {
+      "id": "1007",
+      "name": "比格犬",
+      "nameEn": "beagle",
+      "icon": "/icons/1007.png"
+    },
+    {
+      "id": "1008",
+      "name": "雪纳瑞",
+      "nameEn": "schnauzer",
+      "icon": "/icons/1008.png"
+    },
+    {
+      "id": "1009",
+      "name": "边境牧羊犬",
+      "nameEn": "border collie",
+      "icon": "/icons/1009.png"
+    },
+    {
+      "id": "1010",
+      "name": "萨摩耶",
+      "nameEn": "samoyed",
+      "icon": "/icons/1010.png"
+    },
+    {
+      "id": "1011",
+      "name": "哈士奇",
+      "nameEn": "siberian husky",
+      "icon": "/icons/1011.png"
+    },
+    {
+      "id": "1012",
+      "name": "金毛寻回犬",
+      "nameEn": "golden retriever",
+      "icon": "/icons/1012.png"
+    },
+    {
+      "id": "1013",
+      "name": "拉布拉多",
+      "nameEn": "labrador retriever",
+      "icon": "/icons/1013.png"
+    },
+    {
+      "id": "1014",
+      "name": "德国牧羊犬",
+      "nameEn": "german shepherd",
+      "icon": "/icons/1014.png"
+    },
+    {
+      "id": "1015",
+      "name": "罗威纳",
+      "nameEn": "rottweiler",
+      "icon": "/icons/1015.png"
+    },
+    {
+      "id": "1016",
+      "name": "杜宾犬",
+      "nameEn": "doberman pinscher",
+      "icon": "/icons/1016.png"
+    },
+    {
+      "id": "1017",
+      "name": "松狮",
+      "nameEn": "chow chow",
+      "icon": "/icons/1017.png"
+    },
+    {
+      "id": "1018",
+      "name": "秋田犬",
+      "nameEn": "akita inu",
+      "icon": "/icons/1018.png"
+    },
+    {
+      "id": "1019",
+      "name": "大丹犬",
+      "nameEn": "great dane",
+      "icon": "/icons/1019.png"
+    },
+    {
+      "id": "1020",
+      "name": "圣伯纳犬",
+      "nameEn": "saint bernard",
+      "icon": "/icons/1020.png"
+    },
+    {
+      "id": "1021",
+      "name": "西高地",
+      "nameEn": "west highland white terrier",
+      "icon": "/icons/1021.png"
+    }
+  ],
+  "lastId": "1021"
+}

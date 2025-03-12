@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>今天吃什么</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 95%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .meal-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .meal-title {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .dish-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .dish-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .dish-name {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .dish-meta {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            gap: 10px;
+        }
+
+        .properties {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .total-info {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>今天吃什么？</h1>
+        <div id="breakfast" class="meal-section">
+            <div class="meal-title">早餐</div>
+            <div class="meal-content loading">加载中...</div>
+        </div>
+        <div id="lunch" class="meal-section">
+            <div class="meal-title">午餐</div>
+            <div class="meal-content loading">加载中...</div>
+        </div>
+        <button onclick="getRandomMeals()">换一个</button>
+    </div>
+
+    <script>
+        function renderMeal(meal) {
+            let html = '';
+            meal.dishes.forEach(dish => {
+                html += `
+                    <div class="dish-item">
+                        <div class="dish-header">
+                            <div class="dish-name">${dish.name}</div>
+                            <div class="dish-meta">
+                                <span>${dish.weight}</span>
+                                <span>${dish.calories}卡</span>
+                            </div>
+                        </div>
+                        <div class="properties">
+                            💡 ${dish.properties}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="total-info">
+                    <div>总卡路里：${meal.total_calories}卡</div>
+                    <div>烹饪方式：${meal.cooking_method}</div>
+                    <div>适合人群：${meal.suitable_for}</div>
+                </div>
+            `;
+            return html;
+        }
+
+        function getRandomMeals() {
+            document.querySelector('#breakfast .meal-content').classList.add('loading');
+            document.querySelector('#lunch .meal-content').classList.add('loading');
+
+            fetch('/random-meals')
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('#breakfast .meal-content').innerHTML = renderMeal(data.breakfast);
+                    document.querySelector('#lunch .meal-content').innerHTML = renderMeal(data.lunch);
+                    
+                    document.querySelector('#breakfast .meal-content').classList.remove('loading');
+                    document.querySelector('#lunch .meal-content').classList.remove('loading');
+                })
+                .catch(error => {
+                    console.error('错误:', error);
+                    document.querySelector('#breakfast .meal-content').textContent = '获取失败';
+                    document.querySelector('#lunch .meal-content').textContent = '获取失败';
+                    
+                    document.querySelector('#breakfast .meal-content').classList.remove('loading');
+                    document.querySelector('#lunch .meal-content').classList.remove('loading');
+                });
+        }
+
+        window.onload = getRandomMeals;
+    </script>
+</body>
+</html> 

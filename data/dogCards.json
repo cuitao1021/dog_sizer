@@ -1,0 +1,258 @@
+{
+  "dogCards": [
+    {
+      "id": "card1",
+      "image": "/uploads/card1.jpg",
+      "dogTypeId": "1005",
+      "measurements": {
+        "neck": 37,
+        "chest": 55,
+        "back": 50
+      },
+      "product": {
+        "productId": "3002",
+        "size": "3L"
+      }
+    },
+    {
+      "id": "card2",
+      "image": "/uploads/card2.jpg",
+      "dogTypeId": "1008",
+      "measurements": {
+        "neck": 20,
+        "chest": 30,
+        "back": 40
+      },
+      "product": {
+        "productId": "3002",
+        "size": "1L"
+      }
+    },
+    {
+      "id": "card3",
+      "image": "/uploads/card3.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": 42,
+        "chest": 65,
+        "back": 56
+      },
+      "product": {
+        "productId": "3003",
+        "size": "4L"
+      }
+    },
+    {
+      "id": "card4",
+      "image": "/uploads/card4.png",
+      "dogTypeId": "1006",
+      "measurements": {
+        "neck": 33,
+        "chest": 48,
+        "back": 33
+      },
+      "product": {
+        "productId": "3004",
+        "size": "L"
+      }
+    },
+    {
+      "id": "card5",
+      "image": "/uploads/card5.png",
+      "dogTypeId": "1006",
+      "measurements": {
+        "neck": 35,
+        "chest": 56,
+        "back": 35
+      },
+      "product": {
+        "productId": "3004",
+        "size": "1L"
+      }
+    },
+    {
+      "id": "card6",
+      "image": "/uploads/card6.png",
+      "dogTypeId": "1021",
+      "measurements": {
+        "neck": 38,
+        "chest": 43,
+        "back": 38
+      },
+      "product": {
+        "productId": "3002",
+        "size": "ML"
+      }
+    },
+    {
+      "id": "card7",
+      "image": "/uploads/card7.png",
+      "dogTypeId": "1006",
+      "measurements": {
+        "neck": 38,
+        "chest": 54,
+        "back": 35
+      },
+      "product": {
+        "productId": "3003",
+        "size": "L"
+      }
+    },
+    {
+      "id": "card8",
+      "image": "/uploads/card8.png",
+      "dogTypeId": "1003",
+      "measurements": {
+        "neck": null,
+        "chest": 46,
+        "back": 36
+      },
+      "product": {
+        "productId": "3002",
+        "size": "L"
+      }
+    },
+    {
+      "id": "card9",
+      "image": "/uploads/card9.png",
+      "dogTypeId": "1021",
+      "measurements": {
+        "neck": 28,
+        "chest": 45,
+        "back": 32
+      },
+      "product": {
+        "productId": "3005",
+        "size": "L"
+      }
+    },
+    {
+      "id": "card10",
+      "image": "/uploads/card10.png",
+      "dogTypeId": "1003",
+      "measurements": {
+        "neck": null,
+        "chest": 42,
+        "back": 30
+      },
+      "product": {
+        "productId": "3006",
+        "size": "ML"
+      }
+    },
+    {
+      "id": "card11",
+      "image": "/uploads/card11.png",
+      "dogTypeId": "1008",
+      "measurements": {
+        "neck": null,
+        "chest": 42,
+        "back": 32
+      },
+      "product": {
+        "productId": "3006",
+        "size": "M"
+      }
+    },
+    {
+      "id": "card12",
+      "image": "/uploads/card12.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": null,
+        "chest": 51,
+        "back": 43
+      },
+      "product": {
+        "productId": "3006",
+        "size": "2L"
+      }
+    },
+    {
+      "id": "card13",
+      "image": "/uploads/card13.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": 37,
+        "chest": 60,
+        "back": 47
+      },
+      "product": {
+        "productId": "3005",
+        "size": "3L"
+      }
+    },
+    {
+      "id": "card14",
+      "image": "/uploads/card14.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": null,
+        "chest": 67,
+        "back": 54
+      },
+      "product": {
+        "productId": "3005",
+        "size": "XL"
+      }
+    },
+    {
+      "id": "card15",
+      "image": "/uploads/card15.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": 45,
+        "chest": 67,
+        "back": null
+      },
+      "product": {
+        "productId": "3005",
+        "size": "4L"
+      }
+    },
+    {
+      "id": "card16",
+      "image": "/uploads/compressed/card16_compressed.jpg",
+      "originalImage": "/uploads/card16.png",
+      "dogTypeId": "1009",
+      "measurements": {
+        "neck": 35,
+        "chest": 53,
+        "back": 47
+      },
+      "product": {
+        "productId": "3005",
+        "size": "4L"
+      }
+    },
+    {
+      "id": "card17",
+      "image": "/uploads/compressed/card17_compressed.jpg",
+      "dogTypeId": "1005",
+      "measurements": {
+        "neck": 30,
+        "chest": 35,
+        "back": 40
+      },
+      "product": {
+        "productId": "3005",
+        "size": "CGL"
+      }
+    },
+    {
+      "id": "card18",
+      "image": "/uploads/compressed/card18_compressed.jpg",
+      "originalImage": "/uploads/card18.png",
+      "dogTypeId": "1005",
+      "measurements": {
+        "neck": null,
+        "chest": null,
+        "back": null
+      },
+      "product": {
+        "productId": "3005",
+        "size": "CGL"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "brands": [
+    {
+      "id": "2002",
+      "name": "ALPHAICON",
+      "nameEn": "ALPHAICON",
+      "description": "日本户外宠物服装品牌",
+      "icon": "/brand-icons/2002.png"
+    },
+    {
+      "id": "2003",
+      "name": "拉夫威尔",
+      "nameEn": "RUFFWEAR",
+      "description": "美国户外宠物品牌",
+      "icon": "/brand-icons/2003.png"
+    }
+  ],
+  "lastId": "2003"
+}
