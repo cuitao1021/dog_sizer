@@ -6,8 +6,18 @@ server {
     listen 80;
     server_name 39.105.212.84;
 
-    # 管理端
+    # 管理端 API 和页面
     location /admin {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # API 服务
+    location /api {
         proxy_pass http://localhost:5000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
